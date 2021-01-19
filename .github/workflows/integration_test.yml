@@ -6,9 +6,10 @@ jobs:
   create-cluster:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@master
+
       # Accuire tools for kind
-      - name: Create k8s Kind Cluster
-        uses: helm/kind-action@v1.1.0
+      - uses: engineerd/setup-kind@v0.5.0
         with:
           skipClusterCreation: true
 
