@@ -6,16 +6,18 @@ jobs:
   create-cluster:
     runs-on: ubuntu-latest
     steps:
+      # Accuire tools for kind
       - name: Create k8s Kind Cluster
         uses: helm/kind-action@v1.1.0
-      
-      - name: Checkout Kubernetes Goat
-        uses: actions/checkout@master
         with:
-          name: madhuakula/kubernetes-goat
-          ref: master
-          path: goat
+          skipClusterCreation: true
+
+      # Clone kuberentes goat
+      - name: Clone Kubernetes Goat
+        run: |
+          git clone https://github.com/madhuakula/kubernetes-goat ./kubernetes-goat
       
+      # Setup kind cluster
       - name: Setup Kubernetes Goat
         run: |
          bash goat/kind-setup/setup-kind-cluster-and-goat.sh
