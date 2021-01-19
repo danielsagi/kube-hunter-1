@@ -1,0 +1,21 @@
+name: Integration Test
+
+on: [push, pull_request]
+
+jobs:
+  create-cluster:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create k8s Kind Cluster
+        uses: helm/kind-action@v1.1.0
+      
+      - name: Checkout Kubernetes Goat
+        uses: actions/checkout@master
+        with:
+          name: madhuakula/kubernetes-goat
+          ref: master
+          path: goat
+      
+      - name: Setup Kubernetes Goat
+        run: |
+         bash goat/kind-setup/setup-kind-cluster-and-goat.sh
