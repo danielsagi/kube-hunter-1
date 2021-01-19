@@ -20,4 +20,4 @@ jobs:
       # Setup kind cluster
       - name: Setup Kubernetes Goat
         run: |
-         bash goat/kind-setup/setup-kind-cluster-and-goat.sh
+         cd kubernetes-goat && bash ./kind-setup/setup-kind-cluster-and-goat.sh
