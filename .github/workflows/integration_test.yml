@@ -33,5 +33,5 @@ jobs:
           tags: kube-hunter:integration
 
       - run: |
-          docker run --network host -it --rm kube-hunter:integration --interface --log debug --active
+          docker run --network host --rm kube-hunter:integration --interface --log debug --active
         
