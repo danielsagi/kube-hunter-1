@@ -8,19 +8,7 @@ jobs:
     steps:
       # Accuire tools for kind
       - uses: engineerd/setup-kind@v0.5.0
-        with:
-          skipClusterCreation: true
 
-      # Clone kuberentes goat
-      - name: Clone Kubernetes Goat
-        run: |
-          git clone https://github.com/madhuakula/kubernetes-goat ./kubernetes-goat
-      
-      # Setup kind cluster
-      - name: Setup Kubernetes Goat
-        run: |
-         cd kubernetes-goat && bash ./kind-setup/setup-kind-cluster-and-goat.sh && cd ..
-      
       # Checkout code
       - name: Checkout code
         uses: actions/checkout@v2
