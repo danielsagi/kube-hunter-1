@@ -24,6 +24,6 @@ jobs:
          cd kubernetes-goat && bash ./kind-setup/setup-kind-cluster-and-goat.sh
       
       - name: Testing Cluster
-      - run: |
+        run: |
           kubectl cluster-info
           kubectl get pods -n kube-system
