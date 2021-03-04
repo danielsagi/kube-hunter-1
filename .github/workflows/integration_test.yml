@@ -2,9 +2,16 @@ name: Integration Test
 
 on: [push, pull_request]
 
+env:
+  FORCE_COLOR: 1
+
 jobs:
   test-on-cluster:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        kubernetes-version: ["v1.20.2"]
     steps:
       # Checkout code
       - name: Checkout code
@@ -34,8 +41,8 @@ jobs:
       - name: Setup The Kind Cluster
         uses: engineerd/setup-kind@v0.5.0
         with:
-          image: kindest/node:v1.20.2
+          image: kindest/node:${{ matrix.python-version }}
 
       - name: Run Integration Tests
         run: |
-          ./integration_tests/run_tests.sh localhost:5000/kube-hunter:integration
+          ./integration_tests/run_tests.sh localhost:5000/kube-hunter:integration ${{ matrix.python-version }}

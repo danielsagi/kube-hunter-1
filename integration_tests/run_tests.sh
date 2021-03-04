@@ -1,7 +1,7 @@
 #!/bin/bash
 
 if [ $# -eq 0 ]; then
-    echo -e "No kube-hunter image was specified.\nUsage:\n  ./run_tests.sh <kube_hunter_image>"
+    echo -e "Not enough arguments.\nUsage:\n  ./run_tests.sh <kube_hunter_image> <kuberentes_version>"
     exit 1
 fi
 
@@ -12,7 +12,9 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
+
 KUBE_HUNTER_IMAGE=$1
+KUBE_VERSION=$2
 NODE_EXTERNAL_IP=$(kubectl get nodes -o=custom-columns="EXTERNAL IP":.status.addresses[0].address | tail -n 1)
 
 LOGS_DIRECTORY=/tmp/kube-hunter-logs
@@ -21,7 +23,7 @@ JSON_OUTPUT_FILE="${LOGS_DIRECTORY}/json_output_file.log"
 
 
 # JSON test files constants
-EXPECTED_JSON_DIR="$(pwd)/integration_tests/expected"
+EXPECTED_JSON_DIR="$(pwd)/integration_tests/expected/${KUBE_VERSION}"
 REMOTE_SCAN_EXPECTED_FILE="${EXPECTED_JSON_DIR}/remote_scan.json"
 
 
