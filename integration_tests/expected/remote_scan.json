@@ -1,0 +1,35 @@
+{
+    "nodes": [
+        {
+            "type": "Node/Master",
+            "location": "172.18.0.2"
+        }
+    ],
+    "services": [
+        {
+            "service": "Etcd",
+            "location": "172.18.0.2:2379"
+        },
+        {
+            "service": "Kubelet API",
+            "location": "172.18.0.2:10250"
+        },
+        {
+            "service": "API Server",
+            "location": "172.18.0.2:6443"
+        }
+    ],
+    "vulnerabilities": [
+        {
+            "location": "172.18.0.2:6443",
+            "vid": "KHV002",
+            "category": "Information Disclosure",
+            "severity": "medium",
+            "vulnerability": "K8s Version Disclosure",
+            "description": "The kubernetes version could be obtained from the /version endpoint ",
+            "evidence": "v1.20.2",
+            "avd_reference": "https://avd.aquasec.com/kube-hunter/khv002/",
+            "hunter": "Api Version Hunter"
+        }
+    ]
+}
