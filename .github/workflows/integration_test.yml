@@ -6,9 +6,6 @@ jobs:
   test-on-cluster:
     runs-on: ubuntu-latest
     steps:
-      # Accuire tools for kind
-      - uses: engineerd/setup-kind@v0.5.0
-
       # Checkout code
       - name: Checkout code
         uses: actions/checkout@v2
@@ -29,6 +26,9 @@ jobs:
       - name: Push kube-hunter image to locally deployed registry
         run: |
           docker push localhost:5000/kube-hunter:integration
+      
+      # Accuire tools for kind
+      - uses: engineerd/setup-kind@v0.5.0
 
       - run: |
           kubectl get pods --all-namespaces
