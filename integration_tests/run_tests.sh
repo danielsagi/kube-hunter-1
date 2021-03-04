@@ -1,3 +1,17 @@
+#!/bin/bash
+
+if [ $# -eq 0 ]; then
+    echo -e "No kube-hunter image was specified.\nUsage:\n  ./run_tests.sh <kube_hunter_image>"
+    exit 1
+fi
+
+echo "[*] Trying to use kubectl..."
+kubectl get pods 2> /dev/null
+if [ $? -ne 0 ]; then
+    echo "[-] Could not access the cluster using kubectl, Please configure your kube config."
+    exit 1
+fi
+
 KUBE_HUNTER_IMAGE=$1
 NODE_EXTERNAL_IP=$(kubectl get nodes -o=custom-columns="EXTERNAL IP":.status.addresses[0].address | tail -n 1)
 
@@ -15,7 +29,7 @@ REMOTE_SCAN_EXPECTED_FILE="${EXPECTED_JSON_DIR}/remote_scan.json"
 compare_json_with_expected() {
     # $1 = expected json file
     echo "[*] Comparing json output with $1"
-    jq --argfile a $JSON_OUTPUT_FILE --argfile b "$1" -n '($a | (.. | arrays) |= sort) as $a | ($b | (.. | arrays) |= sort) as $b | $a == $b' 
+    jq --argfile a $JSON_OUTPUT_FILE --argfile b "$1" -n '($a | (.. | arrays) |= sort) as $a | ($b | (.. | arrays) |= sort) as $b | $a == $b' > /dev/null 
 }
 
 # ----------- Tests -------------
@@ -45,5 +59,6 @@ else
     echo "[--] Remote Scan FAILED"
     echo "Expected: $(cat \"$REMOTE_SCAN_EXPECTED_FILE\")"
     echo "Instead Got: $(cat $JSON_OUTPUT_FILE)"
+    exit 1
 fi
 

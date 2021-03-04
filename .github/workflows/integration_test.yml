@@ -34,5 +34,6 @@ jobs:
       - name: Setup The Kind Cluster
         uses: engineerd/setup-kind@v0.5.0
 
-      - run: |
-          kubectl get pods --all-namespaces
+      - name: Run Integration Tests
+        run: |
+          ./integration_tests/run_tests.sh localhost:5000/kube-hunter:integration
