@@ -51,6 +51,7 @@ pyinstaller_static: staticx_deps pyinstaller
 
 .PHONY: install
 install:
+	pip install --upgrade pip setuptools wheel
 	pip install .
 
 .PHONY: uninstall
