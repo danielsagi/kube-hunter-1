@@ -17,12 +17,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      # Builds a local kube-hunter docker image
-      - name: Build Kube-Hunter Image (Caching)
+      # Builds a local kube-hunter docker image, using docker laying caching
+      - name: Build Kube-Hunter Image
         uses: satackey/action-docker-layer-caching@v0.0.11
         continue-on-error: true
-        run:
-          tags: docker build -t localhost:5000/kube-hunter:integration .
+        run: |
+          docker build -t localhost:5000/kube-hunter:integration .
 
       # Run local registry to use with kind
       - name: Run Local Registry
