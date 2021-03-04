@@ -43,8 +43,8 @@ jobs:
       - name: Setup The Kind Cluster
         uses: engineerd/setup-kind@v0.5.0
         with:
-          image: 'kindest/node:${{ matrix.python-version }}'
+          image: 'kindest/node:${{ matrix.kubernetes-version }}'
 
       - name: Run Integration Tests
         run: |
-          ./integration_tests/run_tests.sh localhost:5000/kube-hunter:integration ${{ matrix.python-version }}
+          ./integration_tests/run_tests.sh localhost:5000/kube-hunter:integration ${{ matrix.kubernetes-version }}
