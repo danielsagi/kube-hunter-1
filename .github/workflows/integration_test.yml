@@ -22,6 +22,9 @@ jobs:
         run: |
           docker run -d -p 5000:5000 registry:2
       
+      - run: | 
+          sleep 3
+      
       # Push kube-hunter image to local registry
       - name: Push kube-hunter image to locally deployed registry
         run: |
