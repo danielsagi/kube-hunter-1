@@ -32,10 +32,6 @@ compare_json_with_expected() {
     jq --argfile a $JSON_OUTPUT_FILE --argfile b "$1" -n '($a | (.. | arrays) |= sort) as $a | ($b | (.. | arrays) |= sort) as $b | $a == $b' > /dev/null 
 }
 
-check_errors() {
-    
-}
-
 # ----------- Tests -------------
 test_remote_scan() {
     echo "[*] Starting Remote Scan Test on: $NODE_EXTERNAL_IP"
