@@ -29,7 +29,7 @@ jobs:
       # Run local registry to use with kind
       - name: Run Local Registry
         run: |
-          docker run -d -p 5000:5000 registry:2      
+          docker run -d -p 5000:5000 --name kind-registry registry:2      
       
       - name: Wait For Registry To Load
         run: | 
@@ -43,6 +43,7 @@ jobs:
       - name: Setup The Kind Cluster
         uses: engineerd/setup-kind@v0.5.0
         with:
+          config: ./integration_tests/kind_configs/local_registry.yaml
           image: 'kindest/node:${{ matrix.kubernetes-version }}'
 
       - name: Run Integration Tests

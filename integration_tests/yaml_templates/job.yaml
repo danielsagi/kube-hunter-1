@@ -1,0 +1,22 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: kube-hunter
+spec:
+  template:
+    spec:
+      containers:
+        - name: kube-hunter
+          image: --image--
+          command: ["kube-hunter"]
+          args: --args--
+          volumeMounts:
+          - mountPath: --container-log-path--
+            name: kube-hunter-log
+      volumes:
+        - name: kube-hunter-log
+          hostPath:
+            path: --node-log-path--
+            type: File
+      restartPolicy: Never
+  backoffLimit: 4

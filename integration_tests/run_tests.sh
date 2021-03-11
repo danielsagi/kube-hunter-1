@@ -15,11 +15,16 @@ fi
 # ------------- Tests Variables ----------------
 KUBE_HUNTER_IMAGE=$1
 KUBE_VERSION=$2
+NODE_CONTAINER_NAME=kind-control-plane
 NODE_EXTERNAL_IP=$(kubectl get nodes -o=custom-columns="EXTERNAL IP":.status.addresses[0].address | tail -n 1)
 
 LOGS_DIRECTORY=/tmp/kube-hunter-logs
-LOGS_OUTPUT_FILE="${LOGS_DIRECTORY}/logs_output_file.log"
-JSON_OUTPUT_FILE="${LOGS_DIRECTORY}/json_output_file.log"
+YAML_TEMPLATES_DIRECTORY=./integration_tests/yaml_templates
+
+# This is where debug logs will output to 
+LOGS_OUTPUT_FILE="${LOGS_DIRECTORY}/debug.log"
+# This is where kube-hunter's report will output to
+JSON_OUTPUT_FILE="${LOGS_DIRECTORY}/report.json"
 
 # JSON test files constants
 EXPECTED_JSON_DIR="$(pwd)/integration_tests/expected/${KUBE_VERSION}"
@@ -41,8 +46,10 @@ print_green() {
 }
 
 # ----------- Tests -------------
+
+# Runs remote scan method using a prebuilt image  
+# Set $1 for additional parameters for running
 test_remote_scan() {
-    # set $1 for additional parameters for running
 
     active_flag=""
     expected_file="${EXPECTED_JSON_DIR}/remote_scan.json"
@@ -73,12 +80,38 @@ test_remote_scan() {
     fi
 }
 
-# test_pod_scan() {
+# Runs kube-hunter job inside the cluster, and extracting results
+test_pod_scan() {
+    container_log_path=/tmp/debug.log
+    node_log_path=/tmp/kube-hunter-debug.log
+    args="['--pod', '--active', '--report', 'json', '--log', 'debug', '--log-file', '$LOGS_OUTPUT_FILE']"
+    job_template=$(cat "$YAML_TEMPLATES_DIRECTORY/job.yaml")
 
-# }
+    echo $(cat "$YAML_TEMPLATES_DIRECTORY/job.yaml")
+    # set image in job
+    job="${job_template/--image--/$KUBE_HUNTER_IMAGE}"
+    echo $job
+    job="${job/--args--/$args}"
+    echo $job
+    job="${job/--container-log-path--/$container_log_path}"
+    echo $job
+    job="${job/--node-log-path--/$node_log_path}"
+
+    # apply job
+    echo $args
+    echo $job
+    echo $job > /tmp/job.yaml
+    kubectl apply -f /tmp/job.yaml
+    rm /tmp/job.yaml
+
+    # block until the end of the job
+    kubectl wait --for=condition=complete job/kube-hunter
+    docker cp $NODE_CONTAINER_NAME:$node_log_path $LOGS_OUTPUT_FILE
+}
 
 #####################################
 # ------------ Run Tests ------------
+echo "$YAML_TEMPLATES_DIRECTORY/job.yaml"
 echo "[*] Creating tmp logs directory"
 mkdir $LOGS_DIRECTORY 2>/dev/null
 
@@ -90,3 +123,7 @@ echo
 echo "[*] Starting Remote Active Scan Test on: $NODE_EXTERNAL_IP"
 test_remote_scan active
 echo
+
+echo
+echo "[*] Starting Pod Active Scan Test"
+test_pod_scan
