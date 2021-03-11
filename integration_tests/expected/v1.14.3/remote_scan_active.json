@@ -1,0 +1,68 @@
+{
+    "nodes": [
+        {
+            "type": "Node/Master",
+            "location": "172.18.0.2"
+        }
+    ],
+    "services": [
+        {
+            "service": "Etcd",
+            "location": "172.18.0.2:2379"
+        },
+        {
+            "service": "Kubelet API",
+            "location": "172.18.0.2:10250"
+        },
+        {
+            "service": "API Server",
+            "location": "172.18.0.2:6443"
+        }
+    ],
+    "vulnerabilities": [
+        {
+            "location": "172.18.0.2:6443",
+            "vid": "KHV025",
+            "category": "Denial of Service",
+            "severity": "medium",
+            "vulnerability": "Possible Reset Flood Attack",
+            "description": "Node not patched for CVE-2019-9514. an attacker could cause a\n    Denial of Service by sending specially crafted HTTP requests.",
+            "evidence": "v1.14.3",
+            "avd_reference": "https://avd.aquasec.com/kube-hunter/khv025/",
+            "hunter": "K8s CVE Hunter"
+        },
+        {
+            "location": "172.18.0.2:6443",
+            "vid": "KHV002",
+            "category": "Information Disclosure",
+            "severity": "medium",
+            "vulnerability": "K8s Version Disclosure",
+            "description": "The kubernetes version could be obtained from the /version endpoint ",
+            "evidence": "v1.14.3",
+            "avd_reference": "https://avd.aquasec.com/kube-hunter/khv002/",
+            "hunter": "Api Version Hunter"
+        },
+        {
+            "location": "172.18.0.2:6443",
+            "vid": "KHV024",
+            "category": "Denial of Service",
+            "severity": "medium",
+            "vulnerability": "Possible Ping Flood Attack",
+            "description": "Node not patched for CVE-2019-9512. an attacker could cause a\n    Denial of Service by sending specially crafted HTTP requests.",
+            "evidence": "v1.14.3",
+            "avd_reference": "https://avd.aquasec.com/kube-hunter/khv024/",
+            "hunter": "K8s CVE Hunter"
+        },
+        {
+            "location": "172.18.0.2:6443",
+            "vid": "KHV026",
+            "category": "Privilege Escalation",
+            "severity": "high",
+            "vulnerability": "Arbitrary Access To Cluster Scoped Resources",
+            "description": "Api Server not patched for CVE-2019-11247.\n    API server allows access to custom resources via wrong scope",
+            "evidence": "v1.14.3",
+            "avd_reference": "https://avd.aquasec.com/kube-hunter/khv026/",
+            "hunter": "K8s CVE Hunter"
+        }
+    ]
+}
