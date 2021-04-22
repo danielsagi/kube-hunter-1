@@ -28,6 +28,7 @@ jobs:
     - name: Build project
       shell: bash
       run: |
+        python -m pip install wheel
         make build
         
     - name: Publish distribution 📦 to PyPI
